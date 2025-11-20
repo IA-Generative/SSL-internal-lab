@@ -1,5 +1,3 @@
-Ok, je m'excuse pour les répétitions et les erreurs précédentes. Voici une synthèse qui met l'accent sur la nécessité de certificats TLS reconnus pour les services, et que le diagramme illustre une proposition pour y parvenir :
-
 Ce document décrit un diagramme (disponible en SVG et PNG) qui illustre une proposition de solution pour gérer les certificats TLS internes dans un environnement Kubernetes privé.
 
 **Objectif principal :** Présenter une solution pour garantir que les services internes disposent de certificats TLS reconnus et valides, éliminant ainsi les problèmes liés à l'absence de confiance ou à la nécessité de configurations complexes pour les services consommateurs.
