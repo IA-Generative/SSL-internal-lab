@@ -1,32 +1,14 @@
-# SSL Internal Lab Certificate Flow
+Ok, je m'excuse pour les répétitions et les erreurs précédentes. Voici une synthèse qui met l'accent sur la nécessité de certificats TLS reconnus pour les services, et que le diagramme illustre une proposition pour y parvenir :
 
-This repository stores two exports of a Mermaid diagram that describes how internal TLS certificates are obtained and consumed inside the lab network:
+Ce document décrit un diagramme (disponible en SVG et PNG) qui illustre une proposition de solution pour gérer les certificats TLS internes dans un environnement Kubernetes privé.
 
-- **`Untitled diagram _ Mermaid Chart-2025-10-06-092613.svg`** – the source SVG export intended for high-quality viewing or further editing.
-- **`Untitled diagram _ Mermaid Chart-2025-10-06-093124.png`** – a PNG export suitable for quick sharing or embedding where raster images are preferred.
+**Objectif principal :** Présenter une solution pour garantir que les services internes disposent de certificats TLS reconnus et valides, éliminant ainsi les problèmes liés à l'absence de confiance ou à la nécessité de configurations complexes pour les services consommateurs.
 
-## Diagram overview
+**Points clés :**
 
-### Why this diagram exists
+*   **Flux du certificat :** Le diagramme montre comment Let's Encrypt pourrait valider la propriété du domaine via un défi DNS-01 auprès du fournisseur DNS public, permettant ainsi d'obtenir un certificat valide pour le cluster Kubernetes via `cert-manager` et l'Ingress/Gateway.
+*   **Architecture:** Le diagramme délimite clairement les dépendances publiques (Let's Encrypt, fournisseur DNS) et privées (cluster Kubernetes, utilisateurs internes).
+*   **Avantages:** Le diagramme clarifie l'architecture TLS proposée et sert de référence visuelle pour comprendre la solution envisagée, garantissant une infrastructure de confiance pour les services internes.
+*   **Formats disponibles:** Le diagramme est disponible en SVG (pour une utilisation programmatique et une qualité supérieure) et en PNG (pour un partage rapide).
 
-- Provide a single visual reference for how DNS-01 certificates are requested, validated, and distributed inside the lab's private Kubernetes environment.
-- Clarify the split between public-facing dependencies (Let's Encrypt and the DNS provider) and private consumers (gateway/ingress and internal users).
-- Serve as an onboarding aid for engineers who need to understand the TLS path before operating or modifying the cluster network.
-
-The diagram maps the DNS-01 certificate issuance path for a private Kubernetes cluster. Key components and swimlanes include:
-
-- A public ACME authority (**Let's Encrypt**) initiating DNS-based validation against the **public DNS provider** (e.g., Cloudflare or OVH).
-- A **DNS** zone boundary and a broader **Réseau_interne** grouping that contains a **Cluster_privé** segment for Kubernetes workloads.
-- Internal automation (**cert-manager Kubernetes**) requesting certificates and delivering them to the **Ingress / Gateway** service that fronts internal applications via a **private IP**.
-- **Utilisateurs internes** who rely on internal DNS resolution to reach the gateway.
-
-## Certificate lifecycle steps
-
-1. Let's Encrypt triggers DNS-01 validation and verifies the `_acme-challenge` TXT record through the public DNS service.
-2. Once the challenge is acknowledged, the DNS provider signals validation success back to Let's Encrypt.
-3. A validated certificate is issued to the in-cluster cert-manager, which applies it to the private ingress or gateway endpoint.
-4. Internal users resolve the internal DNS entries that point at the gateway and consume services over the newly issued TLS certificate.
-
-## Viewing the diagrams
-
-Both exports can be opened directly in any modern web browser or image viewer. If you need to reference node labels or edge annotations programmatically, prefer the SVG version because the semantic labels are preserved in the markup.
+En résumé, le diagramme explique comment un cluster Kubernetes privé *pourrait* obtenir des certificats TLS publiquement fiables (via Let's Encrypt et DNS-01) pour ses services internes, offrant une solution stable et fiable pour les applications et services, sans nécessiter de configurations spéciales ou de contournements liés à la confiance des certificats.
